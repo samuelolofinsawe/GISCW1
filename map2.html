@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 2 – Two Markers</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+    #map {
+      height: 90%;
+      width: 100%;
+    }
+    header {
+      text-align: center;
+      background: #228be6;
+      color: white;
+      padding: 1rem;
+    }
+    a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      color: white;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Tutorial 2 – Map with Two Markers</h1>
+    <a href="index.html">⬅ Back to Home</a>
+  </header>
+  <div id="map"></div>
+
+  <script>
+    function initMap() {
+      // Marker locations
+      const loc1 = { lat: 51.602, lng: -3.342 }; // Pontypridd
+      const loc2 = { lat: 51.4816, lng: -3.1791 }; // Cardiff
+
+      // Create map centered roughly between both points
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 10,
+        center: { lat: 51.54, lng: -3.26 },
+      });
+
+      // Add markers
+      new google.maps.Marker({
+        position: loc1,
+        map: map,
+        title: "Pontypridd",
+      });
+
+      new google.maps.Marker({
+        position: loc2,
+        map: map,
+        title: "Cardiff",
+      });
+    }
+  </script>
+
+  <!-- Replace YOUR_API_KEY with your Google Maps API key -->
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-g0Ot0X67TtoJsNViPYJJULnskUB1boo&callback=initMap">
+  </script>
+</body>
+</html>
