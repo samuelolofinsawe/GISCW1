@@ -60,46 +60,76 @@
       // Load external GeoJSON file
       fetch('export.geojson')
         .then(response => {
+          console.log('Fetch response:', response);
           if (!response.ok) {
             throw new Error('GeoJSON file not found. Make sure export.geojson is in the same folder.');
           }
           return response.json();
         })
         .then(data => {
+          console.log('Loaded data:', data);
+          
           // Hide loading message
           document.getElementById('loading').style.display = 'none';
           
-          // Convert OSM data to Google Maps compatible format
-          const features = {
+          // Check if this is OSM format or GeoJSON format
+          let features = {
             type: "FeatureCollection",
             features: []
           };
 
-          // Process OSM elements
-          data.elements.forEach(element => {
-            if (element.type === 'node' && element.lat && element.lon) {
-              let transportType = 'Bus Stop';
-              let name = element.tags?.name || 'Unnamed location';
-              
-              // Determine if it's a railway station or bus stop
-              if (element.tags?.railway === 'station' || element.tags?.railway === 'halt') {
-                transportType = 'Rail Station';
-              }
-              
-              features.features.push({
-                type: "Feature",
-                geometry: {
-                  type: "Point",
-                  coordinates: [element.lon, element.lat]
-                },
-                properties: {
-                  type: transportType,
-                  name: name,
-                  operator: element.tags?.operator || 'Unknown'
+          // Handle OSM export format (has "elements" array)
+          if (data.elements && Array.isArray(data.elements)) {
+            console.log('Processing OSM format with', data.elements.length, 'elements');
+            
+            data.elements.forEach(element => {
+              if (element.type === 'node' && element.lat && element.lon && element.tags) {
+                let transportType = 'Bus Stop';
+                let name = element.tags.name || 'Unnamed location';
+                
+                // Determine if it's a railway station or bus stop
+                if (element.tags.railway === 'station' || element.tags.railway === 'halt') {
+                  transportType = 'Rail Station';
+                } else if (element.tags.highway === 'bus_stop') {
+                  transportType = 'Bus Stop';
                 }
-              });
-            }
-          });
+                
+                features.features.push({
+                  type: "Feature",
+                  geometry: {
+                    type: "Point",
+                    coordinates: [element.lon, element.lat]
+                  },
+                  properties: {
+                    type: transportType,
+                    name: name,
+                    operator: element.tags.operator || 'Unknown'
+                  }
+                });
+              }
+            });
+          } 
+          // Handle standard GeoJSON format
+          else if (data.type === 'FeatureCollection' && data.features) {
+            console.log('Processing GeoJSON format with', data.features.length, 'features');
+            features = data;
+            
+            // Make sure properties are set correctly
+            features.features.forEach(feature => {
+              if (!feature.properties.type) {
+                feature.properties.type = 'Bus Stop';
+              }
+            });
+          }
+          else {
+            throw new Error('Unrecognized file format. Expected OSM or GeoJSON format.');
+          }
+
+          console.log(`Converted ${features.features.length} features`);
+
+          if (features.features.length === 0) {
+            throw new Error('No transport locations found in the file.');
+          }
 
           // Add GeoJSON to map
           map.data.addGeoJson(features);
@@ -110,11 +140,11 @@
             return {
               icon: {
                 path: google.maps.SymbolPath.CIRCLE,
-                scale: 6,
+                scale: 8,
                 fillColor: type === "Bus Stop" ? "#f44336" : "#2196f3",
                 fillOpacity: 1,
                 strokeColor: "#fff",
-                strokeWeight: 1
+                strokeWeight: 2
               }
             };
           });
@@ -135,12 +165,23 @@
             infowindow.open(map);
           });
 
-          console.log(`Loaded ${features.features.length} transport locations`);
+          console.log(`✓ Successfully loaded ${features.features.length} transport locations`);
+          
+          // Show success message briefly
+          document.getElementById('loading').innerHTML = 
+            `✓ Loaded ${features.features.length} locations`;
+          document.getElementById('loading').style.background = '#4caf50';
+          document.getElementById('loading').style.color = 'white';
+          setTimeout(() => {
+            document.getElementById('loading').style.display = 'none';
+          }, 2000);
         })
         .catch(error => {
+          document.getElementById('loading').style.background = '#f44336';
+          document.getElementById('loading').style.color = 'white';
           document.getElementById('loading').innerHTML = 
             `<strong>Error:</strong> ${error.message}<br><br>
-             Make sure the file is named <strong>export.geojson</strong> and is in the same folder as this HTML file.`;
+             <small>Check the browser console (F12) for more details.</small>`;
           console.error('Error loading GeoJSON:', error);
         });
     }
