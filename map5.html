@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Map 5 – Transport POIs (GeoJSON)</title>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    #map { height: 100%; }
+    header {
+      background: #228be6;
+      color: white;
+      padding: 0.8rem;
+      text-align: center;
+    }
+    a { color: #fff; text-decoration: underline; }
+    .legend {
+      position: absolute;
+      bottom: 14px;
+      left: 14px;
+      background: white;
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .key { display: flex; align-items: center; gap: 0.4rem; margin: 0.2rem 0; }
+    .swatch { width: 14px; height: 14px; display: inline-block; border-radius: 50%; }
+    .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Transport POIs (GeoJSON)</h1>
+    <a href="index.html">⬅ Back to Home</a>
+  </header>
+  <div id="map"></div>
+  <div id="loading" class="loading">Loading transport data...</div>
+  <div class="legend">
+    <div class="key"><span class="swatch" style="background:#f44336"></span> Bus Stop</div>
+    <div class="key"><span class="swatch" style="background:#2196f3"></span> Rail Station</div>
+  </div>
+
+  <script>
+    function initMap() {
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 10,
+        center: { lat: 51.602, lng: -3.342 }
+      });
+
+      // Load external GeoJSON file
+      fetch('export.geojson')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('GeoJSON file not found. Make sure export.geojson is in the same folder.');
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Hide loading message
+          document.getElementById('loading').style.display = 'none';
+          
+          // Convert OSM data to Google Maps compatible format
+          const features = {
+            type: "FeatureCollection",
+            features: []
+          };
+
+          // Process OSM elements
+          data.elements.forEach(element => {
+            if (element.type === 'node' && element.lat && element.lon) {
+              let transportType = 'Bus Stop';
+              let name = element.tags?.name || 'Unnamed location';
+              
+              // Determine if it's a railway station or bus stop
+              if (element.tags?.railway === 'station' || element.tags?.railway === 'halt') {
+                transportType = 'Rail Station';
+              }
+              
+              features.features.push({
+                type: "Feature",
+                geometry: {
+                  type: "Point",
+                  coordinates: [element.lon, element.lat]
+                },
+                properties: {
+                  type: transportType,
+                  name: name,
+                  operator: element.tags?.operator || 'Unknown'
+                }
+              });
+            }
+          });
+
+          // Add GeoJSON to map
+          map.data.addGeoJson(features);
+
+          // Style the markers
+          map.data.setStyle((feature) => {
+            const type = feature.getProperty("type");
+            return {
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 6,
+                fillColor: type === "Bus Stop" ? "#f44336" : "#2196f3",
+                fillOpacity: 1,
+                strokeColor: "#fff",
+                strokeWeight: 1
+              }
+            };
+          });
+
+          // Add info window on click
+          const infowindow = new google.maps.InfoWindow();
+          map.data.addListener("click", (event) => {
+            const name = event.feature.getProperty("name");
+            const type = event.feature.getProperty("type");
+            const operator = event.feature.getProperty("operator");
+            
+            infowindow.setContent(`
+              <strong>${name}</strong><br>
+              Type: ${type}<br>
+              ${operator !== 'Unknown' ? `Operator: ${operator}` : ''}
+            `);
+            infowindow.setPosition(event.latLng);
+            infowindow.open(map);
+          });
+
+          console.log(`Loaded ${features.features.length} transport locations`);
+        })
+        .catch(error => {
+          document.getElementById('loading').innerHTML = 
+            `<strong>Error:</strong> ${error.message}<br><br>
+             Make sure the file is named <strong>export.geojson</strong> and is in the same folder as this HTML file.`;
+          console.error('Error loading GeoJSON:', error);
+        });
+    }
+  </script>
+  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-g0Ot0X67TtoJsNViPYJJULnskUB1boo&callback=initMap"></script>
+</body>
+</html>

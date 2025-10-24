@@ -2,63 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutorial 1 – Single Marker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Map 1 – Regular Map (No Markers)</title>
   <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
-    #map {
-      height: 90%;
-      width: 100%;
-    }
+    html, body { height: 100%; margin: 0; }
+    #map { height: 100%; }
     header {
-      text-align: center;
       background: #228be6;
       color: white;
-      padding: 1rem;
+      padding: 0.8rem;
+      text-align: center;
     }
-    a {
-      display: inline-block;
-      margin-top: 0.5rem;
-      color: white;
-      text-decoration: underline;
-    }
+    a { color: #fff; text-decoration: underline; }
   </style>
 </head>
 <body>
   <header>
-    <h1>Tutorial 1 – Basic Map with One Marker</h1>
+    <h1>Regular Map (No Markers)</h1>
     <a href="index.html">⬅ Back to Home</a>
   </header>
   <div id="map"></div>
 
   <script>
     function initMap() {
-      // Example coordinates (Pontypridd area)
-      const location = { lat: 51.602, lng: -3.342 };
-      
-      // Create map
-      const map = new google.maps.Map(document.getElementById("map"), {
+      const ponty = { lat: 51.602, lng: -3.342 };
+      new google.maps.Map(document.getElementById("map"), {
         zoom: 13,
-        center: location,
-      });
-
-      // Add marker
-      new google.maps.Marker({
-        position: location,
-        map: map,
-        title: "Pontypridd Marker",
+        center: ponty,
       });
     }
   </script>
-
-  <!-- Replace YOUR_API_KEY with your Google Maps API key -->
-  <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-g0Ot0X67TtoJsNViPYJJULnskUB1boo&callback=initMap">
-  </script>
+  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-g0Ot0X67TtoJsNViPYJJULnskUB1boo&callback=initMap"></script>
 </body>
 </html>

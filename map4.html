@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Map 4 – Lines & Borders (Polyline + Polygon)</title>
+  <style>
+    html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif}
+    header{text-align:center;background:#228be6;color:#fff;padding:1rem}
+    a{color:#fff;text-decoration:underline}
+    #map{height:calc(100% - 84px)}
+    .legend{position:absolute;bottom:14px;left:14px;background:#fff;padding:.6rem .8rem;border-radius:.5rem;box-shadow:0 2px 8px rgba(0,0,0,.15);font-size:.9rem}
+    .key{display:flex;align-items:center;gap:.5rem;margin:.2rem 0}
+    .swatch{width:18px;height:4px;display:inline-block}
+    .poly{background:#000}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Lines & Borders (Polyline + Polygon)</h1>
+    <a href="index.html">⬅ Back to Home</a>
+  </header>
+  <div id="map"></div>
+  <div class="legend">
+    <div class="key"><span class="swatch poly"></span> Sample route polyline</div>
+    <div class="key"><span class="swatch" style="background:#1e88e5;height:12px;border-radius:2px"></span> Wales boundary polygon (approx.)</div>
+  </div>
+
+  <script>
+    async function initMap() {
+      const { Map } = await google.maps.importLibrary("maps");
+      const map = new Map(document.getElementById("map"), {
+        zoom: 8,
+        center: { lat: 51.6, lng: -3.4 }
+      });
+
+      const walesCoords = [
+        {lat:53.4, lng:-3.2}, {lat:53.3, lng:-3.7}, {lat:53.2, lng:-4.7}, {lat:52.9, lng:-5.2},
+        {lat:52.5, lng:-4.8}, {lat:52.2, lng:-4.7}, {lat:51.9, lng:-5.1}, {lat:51.6, lng:-5.3},
+        {lat:51.4, lng:-4.9}, {lat:51.4, lng:-4.6}, {lat:51.5, lng:-4.2}, {lat:51.6, lng:-3.9},
+        {lat:51.6, lng:-3.6}, {lat:51.7, lng:-3.3}, {lat:51.8, lng:-3.0}, {lat:52.1, lng:-2.9},
+        {lat:52.5, lng:-3.0}, {lat:52.9, lng:-3.1}, {lat:53.2, lng:-3.1}, {lat:53.4, lng:-3.2}
+      ];
+
+      new google.maps.Polygon({
+        map,
+        paths: walesCoords,
+        strokeColor: "#1e88e5",
+        strokeWeight: 2,
+        fillColor: "#1e88e5",
+        fillOpacity: 0.12,
+        clickable: false
+      });
+
+      const a470ish = [
+        { lat: 51.4816, lng: -3.1791 },
+        { lat: 51.5350, lng: -3.2290 },
+        { lat: 51.6020, lng: -3.3420 },
+        { lat: 51.6660, lng: -3.3440 },
+        { lat: 51.7460, lng: -3.3810 }
+      ];
+
+      new google.maps.Polyline({
+        map,
+        path: a470ish,
+        strokeColor: "#000000",
+        strokeOpacity: 0.9,
+        strokeWeight: 3
+      });
+    }
+  </script>
+  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-g0Ot0X67TtoJsNViPYJJULnskUB1boo&callback=initMap"></script>
+</body>
+</html>

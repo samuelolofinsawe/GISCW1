@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Map 3 – Shapes & Polygons</title>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    #map { height: 100%; }
+    header {
+      background: #228be6;
+      color: white;
+      padding: 0.8rem;
+      text-align: center;
+    }
+    a { color: #fff; text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Shapes & Polygons</h1>
+    <a href="index.html">⬅ Back to Home</a>
+  </header>
+  <div id="map"></div>
+
+  <script>
+    function initMap() {
+      const center = { lat: 51.602, lng: -3.342 };
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 13,
+        center
+      });
+
+      // Circle
+      new google.maps.Circle({
+        map,
+        center,
+        radius: 1000,
+        fillColor: '#1e88e5',
+        fillOpacity: 0.2,
+        strokeColor: '#1e88e5',
+        strokeWeight: 2,
+        editable: true
+      });
+
+      // Rectangle
+      new google.maps.Rectangle({
+        map,
+        bounds: {
+          north: 51.61,
+          south: 51.59,
+          east: -3.33,
+          west: -3.35
+        },
+        fillColor: '#43a047',
+        fillOpacity: 0.2,
+        strokeColor: '#43a047',
+        strokeWeight: 2,
+        editable: true
+      });
+
+      // Polygon
+      const polyCoords = [
+        { lat: 51.605, lng: -3.34 },
+        { lat: 51.61, lng: -3.33 },
+        { lat: 51.603, lng: -3.325 }
+      ];
+      new google.maps.Polygon({
+        map,
+        paths: polyCoords,
+        strokeColor: '#f4511e',
+        fillColor: '#f4511e',
+        fillOpacity: 0.2,
+        strokeWeight: 2,
+        editable: true
+      });
+    }
+  </script>
+  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-g0Ot0X67TtoJsNViPYJJULnskUB1boo&callback=initMap"></script>
+</body>
+</html>

@@ -1,104 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Web Mapping Project</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Web Mapping Portfolio</title>
   <style>
-    /* ====== RESET & BASE ====== */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #4c6ef5, #228be6);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f7f7f7;
     }
-
     header {
       text-align: center;
-      padding: 2rem 1rem;
+      background: #228be6;
+      color: #fff;
+      padding: 1rem;
     }
-
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    header p {
-      font-size: 1rem;
-      opacity: 0.9;
-    }
-
-    /* ====== MENU ====== */
-    nav {
-      width: 100%;
-      max-width: 600px;
+    h1 { margin: 0; }
+    .container {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 1rem;
-      margin-top: 2rem;
-      padding: 0 1rem;
+      padding: 1.5rem;
     }
-
-    nav a {
+    .card {
       display: block;
-      text-align: center;
-      background: rgba(255, 255, 255, 0.15);
+      width: 250px;
+      background: white;
+      text-decoration: none;
+      color: black;
       padding: 1rem;
       border-radius: 8px;
-      color: #fff;
-      text-decoration: none;
-      font-size: 1.1rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(4px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: 0.2s;
     }
-
-    nav a:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateY(-3px);
-    }
-
-    /* ====== FOOTER ====== */
+    .card:hover { transform: scale(1.03); }
+    .card h3 { margin-top: 0; }
     footer {
-      margin-top: auto;
+      text-align: center;
       padding: 1rem;
       font-size: 0.9rem;
-      opacity: 0.8;
-    }
-
-    @media (min-width: 600px) {
-      nav a {
-        font-size: 1.2rem;
-      }
+      background: #eee;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>My Web Mapping Portfolio</h1>
-    <p>IS3S665 – Proprietary Front-End Web Mapping APIs</p>
+    <h1>Web Mapping Portfolio</h1>
+    <p><strong>Student Number:</strong> YOUR_STUDENT_NUMBER</p>
   </header>
 
-  <nav>
-    <!-- These will be replaced with your actual map pages -->
-    <a href="map1.html">🗺️ Basic Map</a>
-    <a href="map2.html">🎨 Styled Map</a>
-    <a href="map3.html">📍 Geocoding Example</a>
-    <a href="map4.html">🚗 Directions & Routing</a>
-    <a href="map5.html">📊 My Own GeoJSON Data</a>
-  </nav>
+  <div class="container">
+    <a href="map1.html" class="card">
+      <h3>Map 1: Regular Map (No Markers)</h3>
+      <p>Plain basemap centered on Pontypridd (no markers)</p>
+    </a>
+
+    <a href="map2.html" class="card">
+      <h3>Map 2: Multiple Markers</h3>
+      <p>Three location markers (Pontypridd, Cardiff, Newport)</p>
+    </a>
+
+    <a href="map3.html" class="card">
+      <h3>Map 3: Shapes & Polygons</h3>
+      <p>Editable circle, rectangle and polygon overlays</p>
+    </a>
+
+    <a href="map4.html" class="card">
+      <h3>Map 4: Lines & Borders (Polyline + Polygon)</h3>
+      <p>Wales boundary polygon and a sample polyline representing a route</p>
+    </a>
+
+    <a href="map5.html" class="card">
+      <h3>Map 5: Transport POIs (GeoJSON)</h3>
+      <p>Custom GeoJSON points for bus stops and rail stations with a legend</p>
+    </a>
+  </div>
 
   <footer>
-    <p>Student Number: 12345678 | University of South Wales</p>
+    &copy; 2025 | Web Mapping Coursework
   </footer>
 </body>
 </html>
